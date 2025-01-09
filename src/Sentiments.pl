@@ -131,51 +131,87 @@ keyword_category("event details", neutral).
 keyword_category("calendar invite", neutral).
 
 
-% Rule: Determine email category based on keywords
+% Rule: Categorize email based on both keyword occurrence and sentiment analysis.
+
 email_category(Email, spam) :-
     contains_keyword(Email, Keyword),
-    keyword_category(Keyword, spam).
+    keyword_category(Keyword, spam),
+    sentiment_category(Email, positive),
+    keyword_frequency(Email, Keyword, Frequency),
+    Frequency > 1. % Emails with multiple mentions of spam-related keywords have a higher spam likelihood.
 
 email_category(Email, marketing) :-
     contains_keyword(Email, Keyword),
-    keyword_category(Keyword, marketing).
+    keyword_category(Keyword, marketing),
+    sentiment_category(Email, positive),
+    keyword_frequency(Email, Keyword, Frequency),
+    Frequency > 1. % Multiple marketing keywords increase the likelihood of being categorized as marketing.
 
 email_category(Email, informative) :-
     contains_keyword(Email, Keyword),
-    keyword_category(Keyword, informative).
+    keyword_category(Keyword, informative),
+    sentiment_category(Email, neutral).
 
-% Rule: Categorize email based on sentiment
-email_category(Email, spam) :-
-    high_sentiment(Email, positive),
+email_category(Email, mixed) :- 
     contains_keyword(Email, Keyword),
-    keyword_category(Keyword, spam).
+    (keyword_category(Keyword, spam); keyword_category(Keyword, marketing)),
+    sentiment_category(Email, neutral).
+
+% Rule mixed category
+% marketing or spam keywords appear with a neutral sentiment -> prob spam tbh
+
+email_category(Email, mixed) :-
+    contains_keyword(Email, Keyword),
+    (keyword_category(Keyword, spam); keyword_category(Keyword, marketing)),
+    sentiment_category(Email, neutral).
+
+% Rule  categorizing based on subject and body
+
+email_category(Email, spam) :-
+    (contains_keyword(Email, Keyword), keyword_category(Keyword, spam); contains_subject(Email, Keyword), keyword_category(Keyword, spam)),
+    sentiment_category(Email, positive).
 
 email_category(Email, marketing) :-
-    medium_sentiment(Email, positive),
-    contains_keyword(Email, Keyword),
-    keyword_category(Keyword, marketing).
+    (contains_keyword(Email, Keyword), keyword_category(Keyword, marketing); contains_subject(Email, Keyword), keyword_category(Keyword, marketing)),
+    sentiment_category(Email, positive).
 
-email_category(Email, informative) :-
-    neutral_sentiment(Email),
-    contains_keyword(Email, Keyword),
-    keyword_category(Keyword, informative).
-
-% Additional rules for default or uncategorized emails
-email_category(Email, uncategorized) :-
-    \+ contains_keyword(Email, _).
-
-high_sentiment(Email, positive) :-
+sentiment_category(Email, positive) :-
     sentiment_score(Email, Score),
-    Score > 0.7.
+    Score > 0.4, 
+    \+ contains_negation(Email).
 
-medium_sentiment(Email, positive) :-
+sentiment_category(Email, neutral) :-
     sentiment_score(Email, Score),
-    Score > 0.4, Score =< 0.7.
+    Score =< 0.4, 
+    Score >= -0.4.
 
-neutral_sentiment(Email) :-
+sentiment_category(Email, negative) :-
     sentiment_score(Email, Score),
-    Score >= -0.4, Score =< 0.4.
+    Score < -0.4.
 
-% Example dynamic data (to be provided by Python or other external systems)
-:- dynamic sentiment_score/2.
-:- dynamic contains_keyword/2.
+% Sentiment with negation detection (no urgency)
+contains_negation(Email) :-
+    (contains_keyword(Email, "not"); contains_keyword(Email, "no")),
+    contains_keyword(Email, "urgent").
+
+% Rule for keyword frequency 
+keyword_frequency(Email, Keyword, Frequency) :-
+    findall(Keyword, contains_keyword(Email, Keyword), Keywords),
+    length(Keywords, Frequency).
+
+% Rule WIP - sender quality
+
+email_category(Email, spam) :-
+    sender_address(Email, Address),
+    (sub_string(Address, _, _, _, "offer"); sub_string(Address, _, _, _, "support")),
+    sentiment_category(Email, positive).
+
+% Rules for subject and body matching
+
+contains_subject(Email, Keyword) :-
+    email_subject(Email, Subject),
+    sub_string(Subject, _, _, _, Keyword).
+
+contains_body(Email, Keyword) :-
+    email_body(Email, Body),
+    sub_string(Body, _, _, _, Keyword).
