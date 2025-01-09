@@ -26,6 +26,9 @@ keyword_category("investment opportunity", spam).
 keyword_category("lottery winner", spam).
 keyword_category("claim prize", spam).
 keyword_category("act fast", spam).
+keyword_category("credit card offer", spam).
+keyword_category("special deal", spam).
+keyword_category("free quote", spam).
 keyword_category("last chance", spam).
 keyword_category("double your income", spam).
 keyword_category("your account is at risk", spam).
@@ -35,7 +38,13 @@ keyword_category("password reset", spam).
 keyword_category("verify account", spam).
 keyword_category("phishing alert", spam).
 keyword_category("fraud detected", spam).
+keyword_category("item shared", spam).
 keyword_category("suspicious activity", spam).
+keyword_category("failed delivery", spam).
+keyword_category("exotic", spam).
+keyword_category("sexy", spam).
+keyword_category("hookup", spam).
+keyword_category("love", spam).
 
 % Marketing Keywords
 % TBH half of these are basically spam
