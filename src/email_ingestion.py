@@ -1,39 +1,49 @@
 import imaplib
 import email
 from email.header import decode_header
+import os
+from dotenv import load_dotenv
 
-# This file handles email ingestion - uses imap to import things
+# This file handles email ingestion
+
+# Load environment variables from .env file
+load_dotenv()
 
 def fetch_emails():
-    
-    # Connect to email server
-    imap = imaplib.IMAP4_SSL("imap.gmail.com")
-    imap.login("your_email@example.com", "your_password")
+    # Get credentials from environment variables - #security
+    #  
+    email_address = os.getenv("EMAIL_ADDRESS")
+    email_password = os.getenv("EMAIL_PASSWORD")
+    imap_server = os.getenv("IMAP_SERVER", "imap.gmail.com")  # Default to Gmail IMAP
 
-    # Select inbox
-    imap.select("inbox")
-    _, messages = imap.search(None, "ALL")
+    if not email_address or not email_password:
+        raise ValueError("Email credentials are not set. Please check your .env file.")
+    try:
+        imap = imaplib.IMAP4_SSL(imap_server)
+        imap.login(email_address, email_password)
+        imap.select("inbox")
+        _, messages = imap.search(None, "ALL")
+        emails = {}
+        for num in messages[0].split():
+            _, msg = imap.fetch(num, "(RFC822)")
+            for response_part in msg:
+                if isinstance(response_part, tuple):
+                    # Parse email
+                    msg = email.message_from_bytes(response_part[1])
+                    subject = decode_header(msg["Subject"])[0][0]
+                    if isinstance(subject, bytes):
+                        subject = subject.decode()
+                    body = ""
+                    if msg.is_multipart():
+                        for part in msg.walk():
+                            if part.get_content_type() == "text/plain":
+                                body = part.get_payload(decode=True).decode()
+                                break
+                    else:
+                        body = msg.get_payload(decode=True).decode()
+                    emails[num.decode()] = {"subject": subject, "body": body}
+        imap.logout()
+        return emails
 
-    emails = {}
-    for num in messages[0].split():
-        _, msg = imap.fetch(num, "(RFC822)")
-        for response_part in msg:
-            if isinstance(response_part, tuple):
-                # Parse email
-                msg = email.message_from_bytes(response_part[1])
-                subject = decode_header(msg["Subject"])[0][0]
-                if isinstance(subject, bytes):
-                    subject = subject.decode()
-                body = ""
-                if msg.is_multipart():
-                    for part in msg.walk():
-                        if part.get_content_type() == "text/plain":
-                            body = part.get_payload(decode=True).decode()
-                            break
-                else:
-                    body = msg.get_payload(decode=True).decode()
-                emails[num.decode()] = {"subject": subject, "body": body}
-
-    # Close connection
-    imap.logout()
-    return emails
+    except imaplib.IMAP4.error as e:
+        raise RuntimeError(f"Failed to fetch emails: {e}")
