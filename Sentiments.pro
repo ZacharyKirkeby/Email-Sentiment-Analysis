@@ -1,13 +1,8 @@
 % Facts: Keywords and their corresponding categories
-keyword_category("offer", spam).
-keyword_category("limited time", spam).
-keyword_category("sale", marketing).
-keyword_category("discount", marketing).
-keyword_category("summary", informative).
-keyword_category("report", informative).
-keyword_category("account suspension", spam).
 
 % Spam Keywords
+keyword_category("offer", spam).
+keyword_category("limited time", spam).
 keyword_category("act now", spam).
 keyword_category("gold", spam).
 keyword_category("silver", spam).
@@ -23,6 +18,8 @@ keyword_category("100% guaranteed", spam).
 keyword_category("apply now", spam).
 keyword_category("exclusive deal", spam).
 keyword_category("cash bonus", spam).
+keyword_category("vip offer", spam).
+keyword_category("gift card", spam).
 keyword_category("get rich quick", spam).
 keyword_category("no strings attached", spam).
 keyword_category("investment opportunity", spam).
@@ -32,6 +29,7 @@ keyword_category("act fast", spam).
 keyword_category("last chance", spam).
 keyword_category("double your income", spam).
 keyword_category("your account is at risk", spam).
+keyword_category("account suspension", spam).
 keyword_category("unauthorized login", spam).
 keyword_category("password reset", spam).
 keyword_category("verify account", spam).
@@ -40,6 +38,7 @@ keyword_category("fraud detected", spam).
 keyword_category("suspicious activity", spam).
 
 % Marketing Keywords
+% TBH half of these are basically spam
 keyword_category("new product", marketing).
 keyword_category("best seller", marketing).
 keyword_category("special promotion", marketing).
@@ -52,12 +51,12 @@ keyword_category("deal of the day", marketing).
 keyword_category("shop now", marketing).
 keyword_category("limited stock", marketing).
 keyword_category("save big", marketing).
+keyword_category("sale", marketing).
+keyword_category("discount", marketing).
 keyword_category("free trial", marketing).
 keyword_category("bundle offer", marketing).
 keyword_category("extra savings", marketing).
 keyword_category("membership discount", marketing).
-keyword_category("vip offer", marketing).
-keyword_category("gift card", marketing).
 keyword_category("reward points", marketing).
 keyword_category("holiday discounts", marketing).
 keyword_category("early access", marketing).
@@ -92,6 +91,8 @@ keyword_category("support contact", informative).
 keyword_category("best practices", informative).
 keyword_category("case study", informative).
 keyword_category("research findings", informative).
+keyword_category("summary", informative).
+keyword_category("report", informative).
 
 % Neutral or General Keywords
 keyword_category("thank you", neutral).
@@ -154,7 +155,6 @@ email_category(Email, informative) :-
 email_category(Email, uncategorized) :-
     \+ contains_keyword(Email, _).
 
-% Example predicates for sentiment scores
 high_sentiment(Email, positive) :-
     sentiment_score(Email, Score),
     Score > 0.7.
