@@ -1,0 +1,123 @@
+/* styles.css */
+
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+  }
+  
+  /* Header */
+  header {
+    background-color: #007bff;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+  }
+  
+  header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+  
+  header p {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+  
+  /* Main Content */
+  .main-content {
+    display: flex;
+    height: 100vh;
+  }
+  
+  /* Sidebar (Email List) */
+  .sidebar {
+    width: 25%;
+    background-color: white;
+    border-right: 1px solid #ccc;
+    overflow-y: auto;
+  }
+  
+  .email-list {
+    height: 100%;
+  }
+  
+  .email-item {
+    padding: 1rem;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .email-item:hover {
+    background-color: #f0f8ff;
+  }
+  
+  .email-item h2 {
+    margin: 0;
+    font-size: 1rem;
+  }
+  
+  .email-item p {
+    margin: 0.2rem 0;
+    font-size: 0.8rem;
+    color: #555;
+  }
+  
+  /* Email Details */
+  .details {
+    width: 75%;
+    padding: 1rem;
+    overflow-y: auto;
+  }
+  
+  .email-details h2 {
+    margin-top: 0;
+    font-size: 1.2rem;
+  }
+  
+  .email-details p {
+    margin: 0.5rem 0;
+    line-height: 1.5;
+  }
+  
+  .email-body {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+  }
+  
+  /* Keywords and Prolog Matches */
+  .keywords ul,
+  .prolog-matches ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .keywords li,
+  .prolog-matches li {
+    background-color: #f8f9fa;
+    margin: 0.2rem 0;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  /* Dashboard */
+  .dashboard {
+    padding: 1rem;
+    background-color: white;
+    border-top: 1px solid #ccc;
+  }
+  
+  .chart {
+    margin: 1rem 0;
+  }
+  
+  .chart h3 {
+    margin: 0;
+    font-size: 1rem;
+    text-align: center;
+  }
+  
