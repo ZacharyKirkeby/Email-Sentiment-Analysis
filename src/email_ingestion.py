@@ -11,6 +11,7 @@ load_dotenv()
 
 def fetch_emails():
     # Get credentials from environment variables - #security
+        # TODO - redo off of IMAP, IMAP is deprecated
     #  
     email_address = os.getenv("EMAIL_ADDRESS")
     email_password = os.getenv("EMAIL_PASSWORD")
