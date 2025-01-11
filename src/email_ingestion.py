@@ -1,8 +1,8 @@
-import os
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from dotenv import load_dotenv
-import email
+import base64
+import json
 from email.header import decode_header
 
 load_dotenv()
@@ -13,7 +13,10 @@ load_dotenv()
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 
 def authenticate_gmail():
-    flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
+    """Authenticate and get Gmail service."""
+    with open('credentials.json', 'r') as credentials_file:
+        client_config = json.load(credentials_file)
+    flow = InstalledAppFlow.from_client_config(client_config, SCOPES)
     creds = flow.run_local_server(port=0)
     service = build('gmail', 'v1', credentials=creds)
     return service
@@ -24,13 +27,14 @@ def fetch_emails(numFetch):
         service = authenticate_gmail()  # Authenticate and get Gmail API service
         results = service.users().messages().list(userId='me', labelIds=['INBOX']).execute()
         messages = results.get('messages', [])
+        print(messages)
         
         if not messages:
             print("No messages found.")
             return {}
         
         emails = {}
-        for message in messages[:numFetch]:
+        for message in messages[:5]:
             msg = service.users().messages().get(userId='me', id=message['id']).execute()
             
             subject = ""
@@ -59,5 +63,4 @@ def fetch_emails(numFetch):
         
     except Exception as e:
         raise RuntimeError(f"Failed to fetch emails: {e}")
-    
     

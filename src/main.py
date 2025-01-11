@@ -7,11 +7,15 @@ from sentiment import analyze_sentiment
 # TBH this file is kinda pointless but I wanted to be a tad more organized than usual because I tend to make
 # some really messy files. 
 
+
+# TODO - user input for num emails to fetch\
+
 def main():
-    emails = fetch_emails()
+    fetch_count = 5
+    emails = fetch_emails(fetch_count)
     results = []
     count = 0
-
+    
     # test running without pipeline rn
 
     # the pipeline
