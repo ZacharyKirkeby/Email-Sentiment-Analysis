@@ -27,7 +27,7 @@ def fetch_emails(numFetch):
         service = authenticate_gmail()  # Authenticate and get Gmail API service
         results = service.users().messages().list(userId='me', labelIds=['INBOX']).execute()
         messages = results.get('messages', [])
-        print(messages)
+        #print(messages)
         
         if not messages:
             print("No messages found.")

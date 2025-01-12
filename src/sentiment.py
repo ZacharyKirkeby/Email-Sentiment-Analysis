@@ -1,21 +1,19 @@
 from textblob import TextBlob
 
-def analyze_sentiment(email_body: str) -> float:
+def analyze_sentiment(email: dict | str) -> float:
+    if isinstance(email, dict):
+        # Extract the body if it's a dictionary
+        email_body = email.get("body", "")
+    elif isinstance(email, str):
+        email_body = email
+    else:
+        # Raise an error if the input type is unsupported
+        raise TypeError(f"Expected a string or dictionary, but got {type(email).__name__}")
 
-    """
-    Analyzes the sentiment of the given email body.
-
-    Args:
-        email_body (str): The body of the email to analyze.
-
-    Returns:
-        float: A sentiment polarity score ranging from -1.0 (negative) 
-               to 1.0 (positive). Neutral content returns a score near 0.
-    """
-
-    if not email_body.strip():
-        # Return neutral for empty
+    # Handle empty or invalid body
+    if not isinstance(email_body, str) or not email_body.strip():
         return 0.0
 
+    # Analyze sentiment
     blob = TextBlob(email_body)
     return blob.sentiment.polarity
