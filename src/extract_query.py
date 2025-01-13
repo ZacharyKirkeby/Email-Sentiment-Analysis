@@ -6,6 +6,10 @@ def analyze(subject, body, sentiment_score):
     Sends the email subject, body, and sentiment score to Prolog for analysis.
     Prolog determines the category based on its rules.
     """
+    print(subject)
+    print(body)
+    print(sentiment_score)
+
     prolog = Prolog()
     prolog.consult("sentiments.pl")
     prolog.assertz(f"email_subject('{subject}')")

@@ -15,8 +15,6 @@ def main():
     emails = fetch_emails(fetch_count)
     results = []
     count = 0
-
-    print(type(emails))
     
     # test running without pipeline rn
 
