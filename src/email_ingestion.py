@@ -48,6 +48,7 @@ def fetch_emails(numFetch):
             return {}
 
         emails = {}
+        print(messages.size())
         for message in messages:
             msg = service.users().messages().get(userId='me', id=message['id']).execute()
 
@@ -66,6 +67,7 @@ def fetch_emails(numFetch):
             if 'parts' in msg['payload']:
                 for part in msg['payload']['parts']:
                     mime_type = part.get('mimeType', '')
+                    print(mime_type)
                     data = part.get('body', {}).get('data', '')
 
                     if mime_type == 'text/plain' and data:

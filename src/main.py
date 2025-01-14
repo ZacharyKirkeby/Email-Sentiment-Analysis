@@ -26,7 +26,7 @@ def main():
         category = analyze(email_id, email_content, sentiment_score)
         results.append({"email_id": email_id, "category": category})
         count += 1
-    print(results)
+    #print(results)
 
     # shiny pretty pictures 
     #generate_reports(results)
